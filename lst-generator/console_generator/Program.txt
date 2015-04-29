@@ -1,0 +1,50 @@
+Generated on 29 апреля 2015 г. 23:40:44 by Інна
+  1) using System;
+  2) using System.Collections.Generic;
+  3) using System.IO;
+  4) using System.Linq;
+  5) using System.Text;
+  6) 
+  7) namespace console_generator
+  8) {
+  9) 	internal class Program
+ 10) 	{
+ 11) 		private static void Main(string[] args)
+ 12) 		{
+ 13) 			if (args.Length > 1 || args.Length == 0)
+ 14) 			{
+ 15) 				Console.WriteLine("Incorrect parameters input");
+ 16) 				return;
+ 17) 			}
+ 18) 			var fileExtension = "." + args[0].Trim('.');
+ 19) 			var files = Directory.GetFiles(Environment.CurrentDirectory).Where(x => Path.GetExtension(x) == fileExtension);
+ 20) 			if (!files.Any())
+ 21) 			{
+ 22) 				Console.WriteLine("This directory does not contains files with *.{0} extension", fileExtension);
+ 23) 				return;
+ 24) 			}
+ 25) 			foreach (var file in files)
+ 26) 				if (generate(file, fileExtension))
+ 27) 					Console.WriteLine("{0}{1} generated succesfully", Path.GetFileNameWithoutExtension(file), fileExtension);
+ 28) 				else
+ 29) 					Console.WriteLine("Cannot generate {0}{1}", Path.GetFileNameWithoutExtension(file), fileExtension);
+ 30) 			
+ 31) 		}
+ 32) 
+ 33) 		static bool generate(string path,string extension)
+ 34) 		{
+ 35) 			if(!File.Exists(path))
+ 36) 				return false;
+ 37) 			var newPath = Path.ChangeExtension(path, ".txt");
+ 38) 			using(var reader = new StreamReader(File.OpenRead(path)))
+ 39) 			using (var writer = new StreamWriter(File.Open(newPath, FileMode.OpenOrCreate)))
+ 40) 			{
+ 41) 				int lineCounter = 1;
+ 42) 				writer.WriteLine("Generated on {0:F} by {1}", DateTime.Now, Environment.UserName);
+ 43) 				while (!reader.EndOfStream)
+ 44) 					writer.WriteLine("{0,3}) {1}", lineCounter++, reader.ReadLine());
+ 45) 			}
+ 46) 			return true;
+ 47) 		}
+ 48) 	}
+ 49) }
