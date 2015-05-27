@@ -39,7 +39,7 @@ namespace console_generator
 			using (var writer = new StreamWriter(File.Open(newPath, FileMode.OpenOrCreate)))
 			{
 				int lineCounter = 1;
-				writer.WriteLine("Source file - {0}", path);
+				writer.WriteLine("Source file - {0}", Path.GetFileName(path));
 				writer.WriteLine("Generated on {0:F} by {1}", DateTime.Now, Environment.UserName);
 				while (!reader.EndOfStream)
 					writer.WriteLine("{0,3}) {1}", lineCounter++, reader.ReadLine());
